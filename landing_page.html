@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Gears — Landing Page</title>
+
+  <!-- ✅ Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Hedvig+Letters+Serif:opsz@12..24&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #fafafa;
+      color: #1e1e1e;
+      overflow-x: hidden;
+    }
+
+    /* ===== HERO SECTION ===== */
+    header {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(-45deg, #F19421, #B02029, #F19421, #B02029);
+      background-size: 400% 400%;
+      color: white;
+      overflow: hidden;
+      animation: gradientShift 12s ease infinite;
+      padding: 0 10%;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      width: 250%;
+      height: 250%;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1), transparent 70%);
+      top: -75%;
+      left: -75%;
+      animation: rotate 25s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    header h1 {
+      font-family: "Hedvig Letters Serif", serif;
+      font-size: 4.5rem;
+      font-weight: 600;
+      z-index: 1;
+      letter-spacing: 1px;
+      animation: floatText 3s ease-in-out infinite;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    @keyframes floatText {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    header p {
+      font-size: 1.2rem;
+      margin: 20px 0 40px;
+      z-index: 1;
+      max-width: 650px;
+      animation: fadeIn 2s ease;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 1;
+      animation: fadeIn 2.5s ease;
+    }
+
+    .hero-buttons button {
+      border: none;
+      padding: 14px 36px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+
+    .hero-buttons .get-started {
+      background: #fff;
+      color: #B02029;
+    }
+
+    .hero-buttons .get-started:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+
+    .hero-buttons .explore {
+      background: transparent;
+      border: 2px solid #fff;
+      color: #fff;
+    }
+
+    .hero-buttons .explore:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateY(-3px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== SECTION BASE ===== */
+    section {
+      padding: 100px 10%;
+      text-align: center;
+      scroll-margin-top: 100px; 
+    }
+
+    section h2, section p {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    section.show h2,
+    section.show p {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #B02029;
+      position: relative;
+    }
+
+    section h2::after {
+      content: "";
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #F19421, #B02029);
+      display: block;
+      margin: 12px auto 0;
+      border-radius: 2px;
+      animation: lineGrow 2s ease;
+    }
+
+    @keyframes lineGrow {
+      from { width: 0; opacity: 0; }
+      to { width: 80px; opacity: 1; }
+    }
+
+    section p {
+      font-size: 1.1rem;
+      color: #555;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ===== FEATURES ===== */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      padding: 40px 25px;
+      transition: all 0.6s ease;
+      border-top: 5px solid transparent;
+      border-image: linear-gradient(to right, #F19421, #B02029) 1;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .card h3 {
+      color: #B02029;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ===== CTA ===== */
+    .cta {
+      background: linear-gradient(135deg, #F19421, #B02029);
+      color: #fff;
+      padding: 80px 10%;
+      border-radius: 20px;
+      margin: 100px 10%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(245, 130, 31, 0.4);
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    .cta.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .cta button {
+      background: #fff;
+      color: #B02029;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cta button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.4);
+    }
+
+    footer {
+      background: #1e1e1e;
+      color: #bbb;
+      text-align: center;
+      padding: 30px;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+    }
+
+    footer a {
+      color: #F19421;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      header h1 { font-size: 2.8rem; }
+      header p { font-size: 1rem; padding: 0 20px; }
+      section h2 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>The Gears</h1>
+    <p>The Official Student Publication of Laguna State Polytechnic University — Santa Cruz Main Campus</p>
+
+    <div class="hero-buttons">
+      <button class="get-started" onclick="window.location.href='login.html'">Get Started</button>
+      <button class="explore" onclick="scrollToSection('about')">Explore More</button>
+    </div>
+  </header>
+
+  <section id="about">
+    <h2>What We Do</h2>
+    <p>The Gears is the official school publication dedicated to sharing news, stories, and creative works. We aim to inform, inspire, and give voice to the student community through meaningful writing and visuals.</p>
+
+    <div class="features">
+      <div class="card"><h3>News</h3><p>Covers the latest events and important announcements within the school and community.</p></div>
+      <div class="card"><h3>Updates</h3><p>Provides timely information about campus activities, programs, and student initiatives.</p></div>
+      <div class="card"><h3>Opinion</h3><p>Features insights and viewpoints from students and writers on relevant issues and topics.</p></div>
+      <div class="card"><h3>Feature</h3><p>Tells inspiring stories that highlight people, events, and experiences in the school.</p></div>
+      <div class="card"><h3>Literary</h3><p>Showcases creative works such as poems, essays, and short stories from student writers.</p></div>
+      <div class="card"><h3>Komiks</h3><p>Delivers stories and humor through original comic art created by talented students.</p></div>
+      <div class="card"><h3>Arts</h3><p>Highlights visual creativity, including drawings, digital art, and other artistic expressions.</p></div>
+      <div class="card"><h3>Photo & Videos</h3><p>Presents photos and videos that capture moments and stories reflecting the life of the school community.</p></div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <h2>Stay Connected with The Gears</h2>
+    <p>Read the latest stories, features, and updates that keep you informed and inspired as part of our campus community.</p><br>
+    <button>Explore Stories</button>
+  </div>
+
+  <footer>
+    © 2025 <a href="#">The Gears</a> — WRITE WITHOUT FAVOR. EXPRESS WITHOUT FEAR.
+  </footer>
+
+  <script>
+    function scrollToSection(id) {
+      const section = document.getElementById(id);
+      const yOffset = -20;
+      const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      setTimeout(() => section.classList.add("show"), 300);
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll("section, .card, .cta").forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

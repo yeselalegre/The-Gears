@@ -1,0 +1,180 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gears - Admin Dashboard</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background-color: #fff6f4;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      header {
+        background-color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 25px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 70px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        z-index: 1000;
+      }
+      header img { height: 45px; width: 45px; }
+      header h1 { font-size: 26px; font-weight: 600; color: #f5821f; margin-left: 10px; }
+      .menu-toggle { font-size: 24px; cursor: pointer; color: #f5821f; margin-right: 10px; }
+
+      .orange-bar { position: fixed; top: 70px; left: 0; width: 100%; height: 8px; background-color: #f5821f; z-index: 999; }
+
+      .sidebar {
+        width: 220px;
+        background: #fff;
+        border-right: 1px solid #f0c2a0;
+        padding-top: 90px;
+        position: fixed;
+        top: 78px;
+        left: -220px;
+        bottom: 0;
+        transition: all 0.5s ease-in-out;
+        box-shadow: 3px 0 6px rgba(0,0,0,0.05);
+        overflow-y: auto;
+      }
+      .sidebar.show { left: 0; }
+      .sidebar a, .dropdown-btn {
+        display: block;
+        padding: 12px 20px;
+        text-decoration: none;
+        color: #333;
+        font-size: 16px;
+        transition: 0.3s;
+        cursor: pointer;
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        font-family: inherit;
+      }
+      .sidebar a:hover, .dropdown-btn:hover, .sidebar a.active {
+        background-color: #ffe1cc;
+        color: #f5821f;
+        font-weight: bold;
+      }
+
+      .dropdown-container {
+        display: none;
+        background-color: #fff7f2;
+        border-left: 3px solid #f5821f;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .dropdown-container a {
+        padding-left: 40px;
+        font-size: 15px;
+        color: #555;
+      }
+
+      .dropdown-btn::after {
+        content: "▼";
+        float: right;
+        font-size: 12px;
+        margin-top: 5px;
+        transition: transform 0.3s ease;
+      }
+
+      .dropdown-btn.active::after {
+        transform: rotate(180deg);
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .main-content {
+        padding: 120px 40px;
+        flex: 1;
+        margin-left: 0;
+        transition: margin-left 0.5s;
+      }
+      .main-content.shift { margin-left: 220px; }
+
+      .card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .card h2 { color: #f5821f; font-size: 24px; margin-bottom: 10px; }
+
+      @media (max-width: 768px) {
+        .sidebar { width: 100%; left: -100%; }
+        .sidebar.show { left: 0; }
+        .main-content.shift { margin-left: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div style="display:flex; align-items:center;">
+        <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        <h1>The Gears Admin</h1>
+      </div>
+    </header>
+    <div class="orange-bar"></div>
+
+    <div class="sidebar" id="sidebar">
+      <a href="{{ url_for('admin_dashboard') }}" class="active">📊 Engagement</a>
+      <a href="{{ url_for('admin_publish') }}">📝 Publish</a>
+
+      <button class="dropdown-btn">📂 Categories</button>
+      <div class="dropdown-container">
+        <a href="#">📰 News</a>
+        <a href="#">🔔 Updates</a>
+        <a href="#">💬 Opinion</a>
+        <a href="#">⭐ Feature</a>
+        <a href="#">🎨 Komiks</a>
+        <a href="#">📚 Literary</a>
+        <a href="#">📸 Photos</a>
+        <a href="#">🎥 Videos</a>
+      </div>
+    </div>
+
+    <div class="main-content" id="main-content">
+      <div class="card">
+        <h2>Total Articles</h2>
+        <p>{{ total_articles }}</p>
+      </div>
+      <div class="card">
+        <h2>Total Comments</h2>
+        <p>{{ total_comments }}</p>
+      </div>
+    </div>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("main-content");
+        sidebar.classList.toggle("show");
+        content.classList.toggle("shift");
+      }
+
+      const dropdownBtns = document.getElementsByClassName("dropdown-btn");
+      for (let i = 0; i < dropdownBtns.length; i++) {
+        dropdownBtns[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          const dropdownContent = this.nextElementSibling;
+          dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+        });
+      }
+    </script>
+  </body>
+  </html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Gears - All Articles</title>
+
+  <!-- ✅ BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- ✅ BOOTSTRAP ICONS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- ✅ TAILWIND -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- ✅ GOOGLE FONT: Hedvig Letters Serif -->
+  <link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #1f2937;
+      --nav-bg: #fff;
+      --nav-text: #555;
+      --card-bg: #fff;
+      --border: #eee;
+      --orange: #f5821f;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #e5e7eb;
+      --nav-bg: #1e1e1e;
+      --nav-text: #e5e7eb;
+      --card-bg: #1f1f1f;
+      --border: #333;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+      transition: background 0.3s, color 0.3s, transform 0.3s;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--nav-bg);
+      padding: 20px 40px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    /* 🔸 Apply Hedvig Letters Serif to the logo text */
+    header h1 {
+      color: var(--orange);
+      font-size: 30px;
+      font-weight: bold;
+      font-family: "Hedvig Letters Serif", serif;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--nav-text);
+      margin: 0 8px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    nav a:hover { color: var(--orange); }
+
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: var(--card-bg);
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      z-index: 1001;
+      overflow: hidden;
+    }
+    .dropdown-content a {
+      color: var(--text);
+      padding: 10px 14px;
+      display: block;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .dropdown-content a:hover {
+      background: var(--orange);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--orange);
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: transform 0.2s;
+    }
+    .theme-toggle:hover { transform: rotate(15deg); }
+
+    .account-icon {
+      font-size: 22px;
+      color: var(--nav-text);
+      cursor: pointer;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .account-icon:hover {
+      color: var(--orange);
+      transform: scale(1.1);
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 10px;
+      transition: 0.3s;
+    }
+    .search-container:hover {
+      box-shadow: 0 0 6px rgba(245,130,31,0.4);
+      border-color: var(--orange);
+    }
+    .search-container input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      width: 200px;
+    }
+    .search-container button {
+      background: none;
+      border: none;
+      color: var(--orange);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .hero {
+      position: relative;
+      background: url("{{ url_for('static', filename='uploads/herp.jpg') }}") center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 150px 20px;
+      border-radius: 0 0 20px 20px;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+    }
+
+    .section { margin: 60px auto; max-width: 1200px; padding: 0 20px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .section-header h2 { color: var(--orange); font-size: 24px; font-weight: bold; }
+
+    .view-all {
+      background: var(--orange);
+      color: #fff;
+      font-size: 14px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(245,130,31,0.3);
+    }
+    .view-all:hover {
+      background: #d96f14;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(245,130,31,0.5);
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: 0.3s;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    }
+
+    .card-content { padding: 15px; }
+    .category-label {
+      display: inline-block;
+      background: var(--orange);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .card-content h3 { font-size: 18px; margin-bottom: 10px; color: var(--text); }
+
+    .author-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(245,130,31,0.95);
+      color: white;
+      text-align: center;
+      padding: 8px 0;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 0.3s ease;
+      border-radius: 0 0 15px 15px;
+    }
+    .card:hover .author-label { opacity: 1; transform: translateY(0); }
+
+    .photo-author {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      text-align: center;
+      padding: 6px 0;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 0.3s ease;
+    }
+    .carousel:hover .photo-author { opacity: 1; transform: translateY(0); }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #888;
+      font-size: 14px;
+      background: var(--nav-bg);
+      margin-top: 50px;
+      border-top: 1px solid var(--border);
+    }
+
+    .carousel-item img, .carousel-item video {
+      height: 260px;
+      object-fit: cover;
+      width: 100%;
+      transition: transform 0.4s ease;
+    }
+    .carousel-item img:hover, .carousel-item video:hover { transform: scale(1.03); }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>The Gears</h1>
+  <nav>
+    <a href="/">Home</a>
+    <div class="dropdown">
+      <a href="#">Category ▾</a>
+      <div class="dropdown-content">
+        <a href="/user?category=News">News</a>
+        <a href="/user?category=Updates">Updates</a>
+        <a href="/user?category=Opinion">Opinion</a>
+        <a href="/user?category=Feature">Feature</a>
+        <a href="/user?category=Literary">Literary</a>
+        <a href="/user?category=Komiks">Komiks</a>
+        <a href="/user?category=Arts">Arts</a>
+        <a href="/user?category=Photos">Photos</a>
+        <a href="/user?category=Videos">Videos</a>
+      </div>
+    </div>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+
+    <form action="/user" method="get" class="search-container">
+      <input type="text" name="search" placeholder="Search articles..." value="{{ request.args.get('search', '') }}">
+      <button type="submit">🔍</button>
+    </form>
+
+    <button id="themeToggle" class="theme-toggle" title="Toggle Dark Mode">🌙</button>
+
+    <!-- 🧑 Account Icon -->
+    <i class="bi bi-person-circle account-icon" title="Account"></i>
+  </nav>
+</header>
+
+<section class="hero"><div class="hero-content"></div></section>
+
+{% set categories = ['News','Updates','Opinion','Feature','Literary','Komiks','Arts','Photos','Videos'] %}
+{% for cat in categories %}
+  {% if category == 'All' or category == cat %}
+    {% set cat_articles = [] %}
+    {% for a in articles %}
+      {% if a[5] == cat %}
+        {% set _ = cat_articles.append(a) %}
+      {% endif %}
+    {% endfor %}
+    {% if cat_articles %}
+    <section class="section">
+      <div class="section-header">
+        <h2>{{ cat }}</h2>
+        {% if category == 'All' %}
+        <a href="/user?category={{ cat }}" class="view-all">View All →</a>
+        {% endif %}
+      </div>
+      <div class="card-container">
+        {% if category == 'All' %}
+          {% set displayed_articles = cat_articles[:3] %}
+        {% else %}
+          {% set displayed_articles = cat_articles %}
+        {% endif %}
+        {% for article in displayed_articles %}
+        <div class="card">
+          <a href="/article/{{ article[0] }}" style="text-decoration:none;color:inherit;">
+            <div id="carousel{{ article[0] }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+              <div class="carousel-inner">
+                {% if article[6] %}
+                  {% set files = article[6].split(',') %}
+                  {% for file in files %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                      {% if file.endswith(('.mp4','.mov','.avi','.webm')) %}
+                        <video controls muted>
+                          <source src="{{ url_for('static', filename=file.strip()) }}" type="video/mp4">
+                        </video>
+                      {% else %}
+                        <img src="{{ url_for('static', filename=file.strip()) }}" alt="Article Media">
+                      {% endif %}
+                      <div class="photo-author">Photo by {{ article[2] or 'Unknown' }}</div>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="carousel-item active">
+                    <img src="https://via.placeholder.com/350x200?text=No+Image" alt="No image">
+                    <div class="photo-author">Photo by Unknown</div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="card-content">
+              <span class="category-label">{{ article[5] }}</span>
+              <h3>{{ article[3][:120] }}{% if article[3]|length > 120 %}...{% endif %}</h3>
+            </div>
+            <div class="author-label">Written by {{ article[1] }}</div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+<footer>© 2025 The Gears | All Rights Reserved</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const body = document.body;
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark');
+    toggle.textContent = '☀️';
+  }
+  toggle.addEventListener('click', () => {
+    body.classList.toggle('dark');
+    const darkMode = body.classList.contains('dark');
+    toggle.textContent = darkMode ? '☀️' : '🌙';
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+  });
+</script>
+</body>
+</html>

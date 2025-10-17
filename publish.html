@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Gears Admin - Publish</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #fff6f4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 25px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+    header img { height: 45px; width: 45px; }
+    header h1 { font-size: 26px; font-weight: 600; color: #f5821f; margin-left: 10px; }
+    .menu-toggle { font-size: 24px; cursor: pointer; color: #f5821f; margin-right: 10px; }
+
+    .orange-bar { position: fixed; top: 70px; left: 0; width: 100%; height: 8px; background-color: #f5821f; z-index: 999; }
+
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      border-right: 1px solid #f0c2a0;
+      padding-top: 90px;
+      position: fixed;
+      top: 78px;
+      left: -220px;
+      bottom: 0;
+      transition: all 0.5s ease-in-out;
+      box-shadow: 3px 0 6px rgba(0,0,0,0.05);
+    }
+    .sidebar.show { left: 0; }
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #ffe1cc;
+      color: #f5821f;
+      font-weight: bold;
+    }
+
+    .main-content {
+      padding: 120px 40px;
+      flex: 1;
+      margin-left: 0;
+      transition: margin-left 0.5s;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .main-content.shift { margin-left: 220px; }
+
+    .publish-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 600px;
+    }
+
+    .publish-box h2 {
+      text-align: center;
+      color: #f5821f;
+      margin-bottom: 25px;
+    }
+
+    .form-group { margin-bottom: 15px; }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    textarea {
+      height: 120px;
+      resize: none;
+    }
+
+    button {
+      background-color: #f5821f;
+      color: white;
+      font-size: 16px;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #e46c15;
+    }
+
+    #preview-container {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    #preview-container img,
+    #preview-container video {
+      width: 120px;
+      height: 100px;
+      object-fit: cover;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    /* ===== FILE LIST ===== */
+    #file-list {
+      margin-top: 15px;
+      font-size: 15px;
+    }
+
+    #file-list ul {
+      list-style: none;
+      margin-top: 8px;
+    }
+
+    #file-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+    }
+
+    #file-list span.filename {
+      color: #333;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 15px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .remove-btn:hover {
+      color: #d33;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; left: -100%; }
+      .sidebar.show { left: 0; }
+      .main-content.shift { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div style="display:flex; align-items:center;">
+      <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+      <h1>The Gears Admin</h1>
+    </div>
+  </header>
+
+  <div class="orange-bar"></div>
+
+  <div class="sidebar" id="sidebar">
+    <a href="{{ url_for('admin_dashboard') }}">🏠 Engagement</a>
+    <a href="{{ url_for('admin_publish') }}" class="active">📝 Publish</a>
+  </div>
+
+  <div class="main-content" id="main-content">
+    <div class="publish-box">
+      <h2>Publish New Article</h2>
+      <form action="{{ url_for('admin_publish') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label>Author</label>
+          <input type="text" name="title" placeholder="Enter author name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Photographer</label>
+          <input type="text" name="photographer" placeholder="Enter photographer name">
+        </div>
+
+        <div class="form-group">
+          <label>Headline</label>
+          <input type="text" name="content" placeholder="Enter headline" required>
+        </div>
+
+        <div class="form-group">
+          <label>Content</label>
+          <textarea name="content_text" placeholder="Write your article here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select name="category" required>
+            <option value="">Select Category</option>
+            <option value="News">News</option>
+            <option value="Updates">Updates</option>
+            <option value="Opinion">Opinion</option>
+            <option value="Feature">Feature</option>
+            <option value="Literary">Literary</option>
+            <option value="Komiks">Komiks</option>
+            <option value="Arts">Arts</option>
+            <option value="Photos">Photos</option>
+            <option value="Videos">Videos</option>
+          </select>
+        </div>
+
+        <!-- ✅ MULTIPLE FILE UPLOAD WITH CLEAN LIST -->
+        <div class="form-group">
+          <label>Upload Files (Images or Videos)</label>
+          <input type="file" name="files[]" id="fileInput" multiple accept="image/*,video/*">
+          <div id="preview-container"></div>
+          <div id="file-list"></div>
+        </div>
+
+        <button type="submit">Publish</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const content = document.getElementById("main-content");
+      sidebar.classList.toggle("show");
+      content.classList.toggle("shift");
+    }
+
+    // ✅ FILE MANAGEMENT SCRIPT
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('preview-container');
+    const fileList = document.getElementById('file-list');
+    let selectedFiles = [];
+
+    fileInput.addEventListener('change', function () {
+      const newFiles = Array.from(fileInput.files);
+      newFiles.forEach(f => {
+        if (!selectedFiles.some(existing => existing.name === f.name && existing.size === f.size)) {
+          selectedFiles.push(f);
+        }
+      });
+      updateFileInput();
+      renderPreviewsAndList();
+    });
+
+    function renderPreviewsAndList() {
+      previewContainer.innerHTML = '';
+      fileList.innerHTML = '';
+
+      // Thumbnails
+      selectedFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          let preview;
+          if (file.type.startsWith('image/')) {
+            preview = document.createElement('img');
+            preview.src = e.target.result;
+          } else if (file.type.startsWith('video/')) {
+            preview = document.createElement('video');
+            preview.src = e.target.result;
+            preview.controls = true;
+          }
+          previewContainer.appendChild(preview);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // File List (clean style)
+      if (selectedFiles.length > 0) {
+        let listHTML = `<strong>Files Selected (${selectedFiles.length}):</strong><ul>`;
+        selectedFiles.forEach((file, index) => {
+          listHTML += `
+            <li>
+              <span class="filename">${file.name}</span>
+              <button type="button" class="remove-btn" onclick="removeFile(${index})">Remove</button>
+            </li>`;
+        });
+        listHTML += '</ul>';
+        fileList.innerHTML = listHTML;
+      } else {
+        fileList.innerHTML = '<em>No files selected.</em>';
+      }
+    }
+
+    function removeFile(index) {
+      selectedFiles.splice(index, 1);
+      updateFileInput();
+      renderPreviewsAndList();
+    }
+
+    function updateFileInput() {
+      const dataTransfer = new DataTransfer();
+      selectedFiles.forEach(file => dataTransfer.items.add(file));
+      fileInput.files = dataTransfer.files;
+    }
+  </script>
+
+</body>
+</html>
